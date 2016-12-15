@@ -44,7 +44,26 @@ Chip8::Chip8(){
   registers.fill(0);
   memory.fill(0);
   stack.fill(0);
-  keyboard.fill(0);
+  keyboard = {
+    SDLK_x,
+    SDLK_1,
+    SDLK_2,
+    SDLK_3,
+    SDLK_q,
+    SDLK_w,
+    SDLK_e,
+    SDLK_a,
+    SDLK_s,
+    SDLK_d,
+    SDLK_z,
+    SDLK_c,
+    SDLK_4,
+    SDLK_r,
+    SDLK_f,
+    SDLK_v,
+  };
+
+  //Font loading
 }
 
 
@@ -52,13 +71,24 @@ Chip8::~Chip8(){}
 
 
 bool Chip8::load_rom(const char *ROM_location) {
-  std::ifstream ROM (ROM_location);
-
+  std::ifstream ROM (ROM_location, std::ios::binary | std::ios::ate);
+  
   if ( ROM.is_open() ) {
-    ROM.close();
-    return true;
-  }
+    auto size = ROM.tellg();
+    ROM.seekg(std::ios::beg);
+    
+    if ( size > 3584 ) { //4096 - 0x200 = 3584 
+      ROM.read((char*)&memory[0x200], size);
+      std::cout << "ROM loaded!\n";
+      return true;
 
+    } else {
+      std::cerr << "ROM too big!\n";
+      ROM.close();
+      return false;
+    }
+  }
+  
   std::cerr << "Can't Read File.\n";
   return false;
 }
