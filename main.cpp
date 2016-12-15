@@ -2,6 +2,6 @@
 #include "SDL2/SDL.h"
 
 int main() {
-  std::cout << "Hello Chip-8!" << std::endl;
+  std::cout << "\a" << std::endl;
   return 0;
 }
