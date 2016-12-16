@@ -40,7 +40,11 @@ Chip8::Chip8(){
   index = 0;
   timer_delay = 0;
   timer_sound = 0;
-
+  
+  registers.fill(0);
+  memory.fill(0);
+  stack.fill(0);
+  
   keyboard = {
     SDLK_x,
     SDLK_1,
@@ -60,7 +64,26 @@ Chip8::Chip8(){
     SDLK_v,
   };
 
-  //Font loading
+  const std::array<uint8_t, 80> fontset = { 
+    0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+    0x20, 0x60, 0x20, 0x20, 0x70, // 1
+    0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+    0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+    0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+    0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+    0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+    0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+    0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+    0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+    0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+    0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+    0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+    0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+    0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+    0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+  };
+
+  for ( std::size_t i = 0; i < 80; ++i ) {memory[i] = fontset[i];}
 }
 
 
@@ -73,7 +96,7 @@ bool Chip8::load_rom(const char *ROM_location) {
   if ( ROM.is_open() ) {
     const auto size = ROM.tellg();
     ROM.seekg(std::ios::beg);
-
+    
     if ( size < 3584 ) { //4096 - 0x200 = 3584 
       ROM.read((char*)&memory[0x200], size);
       std::cout << "ROM loaded!\n";
@@ -93,14 +116,8 @@ bool Chip8::load_rom(const char *ROM_location) {
 
 void Chip8::cycle() {
   if ( timer_delay == 0 ) {
-    for (std::size_t i = 0x200; i < 4096; ++i) {
-      program_counter = i;
-      decode_opcode();
-
-      
-    }
+    decode_opcode();
   }
-
   decrease_timers();
 }
 
@@ -109,7 +126,6 @@ void Chip8::decode_opcode() {
   //Fetch opcode
   opcode = memory[program_counter] << 8 | memory[program_counter + 1]; 
 
-  //std::cout << std::hex << (uint16_t)(opcode) << std::endl;
   switch ( opcode & 0xF000 ) {
 
   case 0x00E0: //Opcode to clear screen
@@ -126,7 +142,7 @@ void Chip8::decode_opcode() {
     break;
     
   default:
-    //std::cout << "Could not read OPCODE: " << std::hex << (uint16_t)opcode << std::endl;
+    std::cout << "Could not read OPCODE: " << std::hex << opcode << ", "<< program_counter << std::endl;
     break;
   }
   
@@ -140,13 +156,12 @@ void Chip8::decrease_timers() {
 }
 
 int main(int argc, char *argv[]) {
-  Chip8 chip8;
-
   if ( argc != 2 ) {
     std::cout << "Usage: idc8in 'ROM_LOCATION'" << std::endl;
     return 1;
   }
   
+  Chip8 chip8;
   chip8.load_rom(argv[1]);
   chip8.cycle();
   return 0;
