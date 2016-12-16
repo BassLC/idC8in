@@ -1,17 +1,23 @@
 #include <iostream>
 #include <fstream>
 
-
 int main() {
-  std::ifstream ROM ("/home/bernardo/dev/C++/idC8in/ROMS/PONG"); //(ROM_location);
-
+  std::ifstream ROM ("/home/bernardo/dev/C++/idC8in/ROMS/PONG", std::ios::binary); //(ROM_location);
+  uint8_t i[4096];
+ 
   if ( ROM ) {
     std::cout << "Rom is cool!\n";
+    for ( int l = 0; l < 200; ++l ) {
+      ROM.read((char*)&i[l], 1);
+    }
     ROM.close();
-    return true;
+
+    uint16_t opcode = i[1]; //<< 8; //| i[2];
+    
+    std::cout << (uint16_t)opcode << "\n";
+
   }
 
-  std::cerr << "Can't Read File.\n";
-  return false;
-
+  return 0;
+  
 }
