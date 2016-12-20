@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS=main
+#OBJS=main
 
 #CC specifies which compiler we're using
 CC=clang++
@@ -14,5 +14,7 @@ WARNINGS=-Wall -Wextra -Wpedantic
 LINKER_FLAGS=-lSDL2 -o
 
 #This is the target that compiles our executable
-all : $(OBJS)
-	$(CC) $(VV) $(WARNINGS) $(OBJS).cpp $(LINKER_FLAGS) $(OBJS)
+cpu:
+	$(CC) $(VV) $(WARNINGS) cpu.cpp $(LINKER_FLAGS) cpu
+all: 
+	$(CC) $(VV) $(WARNINGS) main.cpp cpu.cpp $(LINKER_FLAGS) idC8in
