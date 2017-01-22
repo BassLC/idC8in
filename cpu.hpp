@@ -8,7 +8,6 @@ public:
   Chip8();
   ~Chip8();
   bool load_rom(const char *ROM);
-  void cycle();
   void decrease_timers();
   void decode_opcode();
 
