@@ -17,7 +17,8 @@ Chip8::Chip8(){
         stack.fill(0);
         screen.fill(0);
         keyboard.fill(0);
-
+        draw = false;
+        
         const std::array<const uint8_t, 80> fontset = { 
                 0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
                 0x20, 0x60, 0x20, 0x20, 0x70, // 1

@@ -16,5 +16,7 @@ LINKER_FLAGS=-lSDL2 -o
 #This is the target that compiles our executable
 cpu:
 	$(CC) $(VV) $(WARNINGS) cpu.cpp $(LINKER_FLAGS) cpu
+debug:
+	$(CC) $(VV) $(WARNINGS) main.cpp cpu.cpp -g $(LINKER_FLAGS) idC8in
 all: 
-	$(CC) $(VV) $(WARNINGS) main.cpp cpu.cpp $(LINKER_FLAGS) idC8in
+	$(CC) $(VV) $(WARNINGS) main.cpp cpu.cpp -O3 $(LINKER_FLAGS) idC8in
