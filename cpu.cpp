@@ -44,7 +44,6 @@ Chip8::Chip8(){
 
 Chip8::~Chip8(){}
 
-
 bool Chip8::load_rom(const char *ROM_location) {
         std::ifstream ROM (ROM_location, std::ios::binary | std::ios::ate);
         
